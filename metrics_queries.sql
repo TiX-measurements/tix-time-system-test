@@ -46,7 +46,7 @@ where
   timestamp BETWEEN @experiment_start_timestamp and @experiment_end_timestamp
 ;
 
-select avg(abs(downUsage - expected_downUsage))
+select avg(abs(downUsage - expected_downUsage)) * 100
 from
   (SELECT
      `timestamp`,
@@ -70,6 +70,6 @@ from
     WHERE
       user_id = @tix_user_id and
       location_id = @tix_location_id AND
-      timestamp BETWEEN @experiment_start_timestamp and @experiment_end_timestamp;
+      timestamp BETWEEN @experiment_start_timestamp and @experiment_end_timestamp
   ) as t
 ;
