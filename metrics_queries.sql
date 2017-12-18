@@ -46,7 +46,7 @@ where
   timestamp BETWEEN @experiment_start_timestamp and @experiment_end_timestamp
 ;
 
-select avg(abs(downUsage - expected_downUsage)) * 100
+select avg(abs(downUsage - expected_downUsage) / (0.01 + expected_downUsage)) * 100
 from
   (SELECT
      `timestamp`,
@@ -73,3 +73,87 @@ from
       timestamp BETWEEN @experiment_start_timestamp and @experiment_end_timestamp
   ) as t
 ;
+
+SELECT avg(relative_error) AS median
+FROM
+  (SELECT
+     @row_id := @row_id + 1 AS row_id,
+     x.relative_error       AS relative_error
+   FROM
+     (
+       SELECT
+         downUsage - expected_downUsage AS                                  error,
+         abs(downUsage - expected_downUsage) / (0.001 + expected_downUsage) relative_error
+       FROM
+         (SELECT
+            `timestamp`,
+            downUsage,
+            CASE
+            WHEN timestamp BETWEEN @experiment_start_timestamp_with_transition AND
+            timestampadd(SECOND, @seconds_lapse_between_speed_changes, @experiment_start_timestamp_with_transition)
+              THEN 1.0
+            WHEN timestamp BETWEEN timestampadd(SECOND, @seconds_lapse_between_speed_changes,
+                                                @experiment_start_timestamp_with_transition) AND
+            timestampadd(SECOND, 2 * @seconds_lapse_between_speed_changes, @experiment_start_timestamp_with_transition)
+              THEN 0.75
+            WHEN timestamp BETWEEN timestampadd(SECOND, 2 * @seconds_lapse_between_speed_changes,
+                                                @experiment_start_timestamp_with_transition) AND
+            timestampadd(SECOND, 3 * @seconds_lapse_between_speed_changes, @experiment_start_timestamp_with_transition)
+              THEN 0.5
+            WHEN timestamp BETWEEN timestampadd(SECOND, 3 * @seconds_lapse_between_speed_changes,
+                                                @experiment_start_timestamp_with_transition) AND
+            timestampadd(SECOND, 4 * @seconds_lapse_between_speed_changes, @experiment_start_timestamp_with_transition)
+              THEN 0.25
+            ELSE 0.0
+            END AS expected_downUsage
+          FROM measure
+          WHERE
+            user_id = @tix_user_id AND
+            location_id = @tix_location_id AND
+            timestamp BETWEEN @experiment_start_timestamp AND @experiment_end_timestamp
+         ) AS t
+       ORDER BY relative_error
+     ) x,
+     (SELECT @row_id := 0) t2
+  ) o,
+  (
+    SELECT count(*) AS total_rows
+    FROM (
+           SELECT
+             downUsage - expected_downUsage AS                                  error,
+             abs(downUsage - expected_downUsage) / (0.001 + expected_downUsage) relative_error
+           FROM
+             (SELECT
+                `timestamp`,
+                downUsage,
+                CASE
+                WHEN timestamp BETWEEN @experiment_start_timestamp_with_transition AND
+                timestampadd(SECOND, @seconds_lapse_between_speed_changes, @experiment_start_timestamp_with_transition)
+                  THEN 1.0
+                WHEN timestamp BETWEEN timestampadd(SECOND, @seconds_lapse_between_speed_changes,
+                                                    @experiment_start_timestamp_with_transition) AND
+                timestampadd(SECOND, 2 * @seconds_lapse_between_speed_changes,
+                             @experiment_start_timestamp_with_transition)
+                  THEN 0.75
+                WHEN timestamp BETWEEN timestampadd(SECOND, 2 * @seconds_lapse_between_speed_changes,
+                                                    @experiment_start_timestamp_with_transition) AND
+                timestampadd(SECOND, 3 * @seconds_lapse_between_speed_changes,
+                             @experiment_start_timestamp_with_transition)
+                  THEN 0.5
+                WHEN timestamp BETWEEN timestampadd(SECOND, 3 * @seconds_lapse_between_speed_changes,
+                                                    @experiment_start_timestamp_with_transition) AND
+                timestampadd(SECOND, 4 * @seconds_lapse_between_speed_changes,
+                             @experiment_start_timestamp_with_transition)
+                  THEN 0.25
+                ELSE 0.0
+                END AS expected_downUsage
+              FROM measure
+              WHERE
+                user_id = @tix_user_id AND
+                location_id = @tix_location_id AND
+                timestamp BETWEEN @experiment_start_timestamp AND @experiment_end_timestamp
+             ) AS t
+           ORDER BY relative_error
+         ) x
+  ) p
+WHERE o.row_id IN (floor(p.total_rows / 2), ceil(p.total_rows / 2));
