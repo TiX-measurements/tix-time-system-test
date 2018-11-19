@@ -1,3 +1,4 @@
 #!/bin/bash
 
-pip3 install --user yaml
+sudo apt install python3.6 python3.6-dev
+sudo python3.6 -m pip install pyyaml
