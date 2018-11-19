@@ -1,21 +1,29 @@
 #!/usr/bin/python3.6
 
-import yaml
-from torrent_client import *
+from modules.torrent_client import *
 
 class TorrentManager:
 
-    CLIENT_LOG_FILE = os.path.realpath('../log/torrent_client.log')
-    TORRENTS_PATH = os.path.realpath('../torrents')
+    CLIENT_LOG_FILE = os.path.realpath('log/torrent_client.log')
+    TORRENTS_PATH = os.path.realpath('torrents')
 
-    def __init__(self, configuration_path):
-        with open(configuration_path,'r') as stream:
-            self.configuration = yaml.load(stream)
-            self.max_speed = self.configuration['max_speed']
-            self.intervals = self.configuration['intervals']
-            self.start_timer = self.configuration['start_timer']
-
-        self.torrent_client = TorrentClient
+    def __init__(self, max_speed, intervals):
+        self.max_speed = max_speed
+        self.intervals = intervals
+        self.torrent_client = TorrentClient(TORRENTS_PATH,log_file=CLIENT_LOG_FILE)
 
     def start(self):
-        return None
+        self.torrent_client.start()
+
+        for interval in self.intervals:
+            speed = self.__percentage_to_speed(interval['speed_percentage'])
+            self.torrent_client.change_max_download_speed(speed)
+            sleep(self.__minutes_to_seconds[interval['duration']])
+
+        self.torrent_client.stop()
+
+    def __percentage_to_speed(self, speed_percentage):
+        return int(self.max_speed * speed_percentage / 100.0)
+
+    def __minutes_to_seconds(self, minutes):
+        return int(minutes * 60)

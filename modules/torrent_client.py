@@ -8,7 +8,8 @@ class TorrentClient:
 
     WAIT_UNTIL_DEAD_TIME = 5
     WAIT_UNTIL_TORRENTS_ARE_LOADED = 1
-    CWD = os.path.realpath('../torrent_client')
+
+    CWD = os.path.realpath('torrent_client')
 
     OPEN_TORRENT_CLIENT_COMMAND = ['java', '-jar', 'Azureus2.jar', '--ui=console']
     LOG_OFF_COMMAND = 'log off\n'
@@ -24,20 +25,18 @@ class TorrentClient:
         self.cwd = cwd
         self.log_file = log_file
 
-    def start(self, speed):
+    def start(self):
         self.process = Popen(self.OPEN_TORRENT_CLIENT_COMMAND,
                              stdin=PIPE,
                              stdout=self.log_file,
-                             stderr=self.log_file,
+                             stderr=DEVNULL,
                              cwd=self.cwd,
                              encoding='utf8')
 
         self.__write_message(self.LOG_OFF_COMMAND)
         self.__write_message(self.REMOVE_ALL_COMMAND)
-        self.change_max_download_speed(speed)
         self.__write_message(self.__add_all_torrents_command())
-        #Wait for torrents to load
-        sleep(WAIT_UNTIL_TORRENTS_ARE_LOADED)
+        sleep(WAIT_UNTIL_TORRENTS_ARE_LOADED)                       # Wait for torrents to load
         self.__write_message(self.QUEUE_ALL_COMMAND)
 
     def change_max_download_speed(self, speed):
