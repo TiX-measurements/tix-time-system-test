@@ -12,7 +12,7 @@ class TorrentManager:
         self.intervals = intervals
         self.torrent_client = TorrentClient(TORRENTS_PATH,log_file=CLIENT_LOG_FILE)
 
-    def start(self):
+    def run(self):
         self.torrent_client.start()
 
         for interval in self.intervals:
