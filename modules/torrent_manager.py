@@ -10,7 +10,8 @@ class TorrentManager:
     def __init__(self, max_speed, intervals):
         self.max_speed = max_speed
         self.intervals = intervals
-        self.torrent_client = TorrentClient(TORRENTS_PATH,log_file=CLIENT_LOG_FILE)
+        self.torrent_client = TorrentClient(self.TORRENTS_PATH,
+                                            log_file=open(self.CLIENT_LOG_FILE,'w'))
 
     def run(self):
         self.torrent_client.start()
@@ -18,7 +19,7 @@ class TorrentManager:
         for interval in self.intervals:
             speed = self.__percentage_to_speed(interval['speed_percentage'])
             self.torrent_client.change_max_download_speed(speed)
-            sleep(self.__minutes_to_seconds[interval['duration']])
+            sleep(self.__minutes_to_seconds(interval['duration']))
 
         self.torrent_client.stop()
 
