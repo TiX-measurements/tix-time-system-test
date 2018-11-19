@@ -26,7 +26,7 @@ if __name__ == '__main__':
         sys.exit(-1);
     if (not os.path.exists(BUILDFILE)):
         print("no existe. Hay que hacer build");
-        gradle_build_process=Popen(['gradle', ':Model:jar'], stdout=PIPE, stderr=PIPE, cwd="./tix-time-client", shell=True)
+        gradle_build_process=Popen(['gradle', ':Model:jar'], stdout=PIPE, stderr=PIPE, cwd="tix-time-client/")
         gradle_build_process.wait();
     else:
         print("ya existe el build");
