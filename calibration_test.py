@@ -4,7 +4,7 @@ import subprocess
 import argparse
 import sys, getopt
 import yaml
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, signal
 import pdb
 
 BUILDFILE= "tix-time-client/Model/build/libs/tix-time-client.jar"
@@ -20,8 +20,7 @@ parser.add_argument("--torrent-file-config","-tfc");
 args = parser.parse_args()
 
 if __name__ == '__main__':
-    username = args.user;
-    if ((not args.user) or (not args.password) or (not args.installation) or (not args.port) or (not args.logsPath) or (not args.torrent-file-config)):
+    if ((not args.user) or (not args.password) or (not args.installation) or (not args.port) or (not args.logsPath) or (not args.torrent_file_config)):
         print("Bad arguments. Please type -h or --help");
         sys.exit(-1);
     if (not os.path.exists(BUILDFILE)):
@@ -34,12 +33,12 @@ if __name__ == '__main__':
     #pdb.set_trace()
     # Leer el yaml al principio para saber cuando empizan los tests (start time)
     # Hacer un sleep de la resta entre el start time y el tiempo actualself.
-    # Después el start time convertido en epoc. (fijarte dia y hora para construir epoc).
+    # Despues el start time convertido en epoc. (fijarte dia y hora para construir epoc).
     # Guardar el archivo test_desription.yaml (Va a tener el start time en epoc, el max speed y los intervalos). Guardarlo en la carpeta de los logs (los json))
     # Mandar a ejecutar el cliente y el torrent.
-    # Mandar la señal
+    # Mandar la senal
     tix_time_client_process=Popen(['java', '-jar', str(BUILDFILE), str(args.user), str(args.password), str(args.installation), str(args.port), str(args.logsPath)], stdout= logfile, stderr=PIPE, cwd=".")
-    with open(args.torrent-file-config, "r") as test_configuration_file:
+    with open(args.torrent_file_config, "r") as test_configuration_file:
         test_configuration = yaml.load(test_configuration_file);
     torrent_manager = TorrentManager(test_configuration['max_speed'], test_configuration['intervals']);
     torrent_manager.run();
