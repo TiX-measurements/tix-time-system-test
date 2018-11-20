@@ -1,15 +1,19 @@
 #!/usr/bin/python3
 
+import os
+from time import sleep
 from modules.torrent_client import *
 
 class TorrentManager:
 
-    CLIENT_LOG_FILE = os.path.realpath('log/torrent_client.log')
+    LOG_PATH = 'log'
+    CLIENT_LOG_FILE = os.path.realpath(LOG_PATH+'/torrent_client.log')
     TORRENTS_PATH = os.path.realpath('torrents')
 
     def __init__(self, max_speed, intervals):
         self.max_speed = max_speed
         self.intervals = intervals
+        os.makedirs(self.LOG_PATH, exist_ok=True)
         self.torrent_client = TorrentClient(self.TORRENTS_PATH,
                                             log_file=open(self.CLIENT_LOG_FILE,'w'))
 

@@ -6,17 +6,17 @@ from subprocess import Popen, PIPE, DEVNULL
 
 class TorrentClient:
 
-    WAIT_UNTIL_DEAD_TIME = 5
+    WAIT_UNTIL_DEAD_TIME       = 5
     WAIT_TIME_BETWEEN_COMMANDS = 1
 
     CWD = os.path.realpath('torrent_client')
 
     OPEN_TORRENT_CLIENT_COMMAND = ['java', '-jar', 'Azureus2.jar', '--ui=console']
-    LOG_OFF_COMMAND = 'log off\n'
+    LOG_OFF_COMMAND             = 'log off\n'
     REMOVE_ALL_TORRENTS_COMMAND = 'remove all\n'
-    QUEUE_ALL_TORRENTS_COMMAND = 'queue all\n'
-    QUIT_COMMAND = 'quit\n'
-    SHOW_TORRENTS_COMMAND = 'show torrents\n'
+    QUIT_COMMAND                = 'quit\n'
+    SHOW_TORRENTS_COMMAND       = 'show torrents\n'
+    FORCE_START_ALL_COMMAND     = 'forcestart all\n'
 
     def __init__(self, torrents_path, cwd=CWD, log_file=DEVNULL):
         self.process = None
@@ -38,11 +38,14 @@ class TorrentClient:
         self.__write_message(self.REMOVE_ALL_TORRENTS_COMMAND)
         sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
         self.__write_message(self.__add_all_torrents_command())
-
+        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+        self.show_torrents()
+        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+        self.__write_message(self.FORCE_START_ALL_COMMAND)        
+        
     def change_max_download_speed(self, speed):
         self.__write_message('set max_down '+str(speed)+'\n')
         self.show_torrents()
-        #self.__write_message(self.QUEUE_ALL_TORRENTS_COMMAND)
 
     def show_torrents(self):
         self.__write_message(self.SHOW_TORRENTS_COMMAND)
