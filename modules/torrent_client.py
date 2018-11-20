@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python3
 
 import os
 from time import sleep
@@ -18,7 +18,6 @@ class TorrentClient:
     QUIT_COMMAND = 'quit\n'
     SHOW_TORRENTS_COMMAND = 'show torrents\n'
 
-    #TODO: Delete downloaded torrents and change download directory
     def __init__(self, torrents_path, cwd=CWD, log_file=DEVNULL):
         self.process = None
         self.torrents_path = torrents_path
@@ -30,8 +29,7 @@ class TorrentClient:
                              stdin=PIPE,
                              stdout=self.log_file,
                              stderr=DEVNULL,
-                             cwd=self.cwd,
-                             encoding='utf8')
+                             cwd=self.cwd)
 
         self.show_torrents()
         sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
@@ -40,28 +38,24 @@ class TorrentClient:
         self.__write_message(self.REMOVE_ALL_TORRENTS_COMMAND)
         sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
         self.__write_message(self.__add_all_torrents_command())
-        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
-        self.show_torrents()
-        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
-        self.__write_message(self.QUEUE_ALL_TORRENTS_COMMAND)
 
     def change_max_download_speed(self, speed):
         self.__write_message('set max_down '+str(speed)+'\n')
         self.show_torrents()
+        #self.__write_message(self.QUEUE_ALL_TORRENTS_COMMAND)
 
     def show_torrents(self):
         self.__write_message(self.SHOW_TORRENTS_COMMAND)
 
     def stop(self):
         self.__write_message(self.QUIT_COMMAND)
-        sleep(self.WAIT_UNTIL_DEAD_TIME)    
-        self.process.kill()
+        self.process.wait()    
 
     def log_file(self):
         return self.LOG_FILE
 
     def __write_message(self, message):
-        self.process.stdin.write(message)
+        self.process.stdin.write(message.encode('utf-8'))
         self.process.stdin.flush()
 
     def __add_all_torrents_command(self):
