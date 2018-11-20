@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import glob
 from time import sleep
 from subprocess import Popen, PIPE, DEVNULL
 
@@ -10,6 +11,7 @@ class TorrentClient:
     WAIT_TIME_BETWEEN_COMMANDS = 1
 
     CWD = os.path.realpath('torrent_client')
+    DOWNLOAD_PATH = os.path.realpath('torrent_downloads')
 
     OPEN_TORRENT_CLIENT_COMMAND = ['java', '-jar', 'Azureus2.jar', '--ui=console']
     LOG_OFF_COMMAND             = 'log off\n'
@@ -17,12 +19,14 @@ class TorrentClient:
     QUIT_COMMAND                = 'quit\n'
     SHOW_TORRENTS_COMMAND       = 'show torrents\n'
     FORCE_START_ALL_COMMAND     = 'forcestart all\n'
+    SET_DEFAULT_SAVE_PATH       = 'set "Default save path" "' + DOWNLOAD_PATH + '" string\n'
 
     def __init__(self, torrents_path, cwd=CWD, log_file=DEVNULL):
         self.process = None
         self.torrents_path = torrents_path
         self.cwd = cwd
         self.log_file = log_file
+        os.makedirs(self.DOWNLOAD_PATH, exist_ok=True)
 
     def start(self):
         self.process = Popen(self.OPEN_TORRENT_CLIENT_COMMAND,
@@ -31,12 +35,15 @@ class TorrentClient:
                              stderr=DEVNULL,
                              cwd=self.cwd)
 
-        self.show_torrents()
         sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
         self.__write_message(self.LOG_OFF_COMMAND)
+        self.__write_message(self.SET_DEFAULT_SAVE_PATH)
+        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+        self.show_torrents()
         sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
         self.__write_message(self.REMOVE_ALL_TORRENTS_COMMAND)
         sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+        self.__delete_torrents_downloaded()
         self.__write_message(self.__add_all_torrents_command())
         sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
         self.show_torrents()
@@ -63,3 +70,9 @@ class TorrentClient:
 
     def __add_all_torrents_command(self):
         return 'add '+self.torrents_path+'\n'
+
+    def __delete_torrents_downloaded(self):
+        files = glob.glob(self.DOWNLOAD_PATH+'/*')
+        
+        for file in files:
+            os.remove(file)

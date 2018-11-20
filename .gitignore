@@ -1,3 +1,4 @@
 tmp/
 log/
+torrent_downloads/
 modules/__pycache__
