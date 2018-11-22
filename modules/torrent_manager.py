@@ -6,9 +6,11 @@ from modules.torrent_client import *
 
 class TorrentManager:
 
-    LOG_PATH = 'log'
+    LOG_PATH        = 'log'
     CLIENT_LOG_FILE = os.path.realpath(LOG_PATH+'/torrent_client.log')
-    TORRENTS_PATH = os.path.realpath('torrents')
+    TORRENTS_PATH   = os.path.realpath('torrents')
+
+    MINUTE_IN_SECONDS = 60
 
     def __init__(self, max_speed, intervals):
         self.max_speed = max_speed
@@ -23,12 +25,12 @@ class TorrentManager:
         for interval in self.intervals:
             speed = self.__percentage_to_speed(interval['speed_percentage'])
             self.torrent_client.change_max_download_speed(speed)
-            sleep(self.__minutes_to_seconds(interval['duration']))
+            
+            for i in range(0:interval['duration']):
+                sleep(self.MINUTE_IN_SECONDS)
+                self.torrent_client.show_torrents()
 
         self.torrent_client.stop()
 
     def __percentage_to_speed(self, speed_percentage):
         return int(self.max_speed * speed_percentage / 100.0)
-
-    def __minutes_to_seconds(self, minutes):
-        return int(minutes * 60)

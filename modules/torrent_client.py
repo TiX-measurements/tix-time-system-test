@@ -19,6 +19,7 @@ class TorrentClient:
     QUIT_COMMAND                = 'quit\n'
     SHOW_TORRENTS_COMMAND       = 'show torrents\n'
     FORCE_START_ALL_COMMAND     = 'forcestart all\n'
+    STOP_ALL_TORRENTS_COMMAND   = 'stop all\n'
     SET_DEFAULT_SAVE_PATH       = 'set "Default save path" "' + DOWNLOAD_PATH + '" string\n'
 
     def __init__(self, torrents_path, cwd=CWD, log_file=DEVNULL):
@@ -26,9 +27,11 @@ class TorrentClient:
         self.torrents_path = torrents_path
         self.cwd = cwd
         self.log_file = log_file
+        self.idle = True
         os.makedirs(self.DOWNLOAD_PATH, exist_ok=True)
 
     def start(self):
+        self.idle = False
         self.process = Popen(self.OPEN_TORRENT_CLIENT_COMMAND,
                              stdin=PIPE,
                              stdout=self.log_file,
@@ -52,7 +55,13 @@ class TorrentClient:
         
     def change_max_download_speed(self, speed):
         self.__write_message('set max_down '+str(speed)+'\n')
-        self.show_torrents()
+            
+        if speed == 0 && !self.idle:
+            self.idle = True
+            self.__write_message(self.STOP_ALL_TORRENTS_COMMAND)
+        elif speed != 0 && self.idle:
+            self.idle = False
+            self.__write_message(self.FORCE_START_ALL_COMMAND)
 
     def show_torrents(self):
         self.__write_message(self.SHOW_TORRENTS_COMMAND)
