@@ -39,7 +39,8 @@ INTERVAL_INDEX = 'intervals'
 CURRENT_PATH="."
 JAVA_COMMAND= 'java'
 JAVA_OPTION= '-jar'
-
+CLIENTLOGFILEPATH = 'log/client.log'
+SLEEPSECONDSAFTERTORRENTFINISH = 60
 '''
 PRE: --
 POS: Avisa al usuario que falta mas de un dia para la ejecucion de la prueba.
