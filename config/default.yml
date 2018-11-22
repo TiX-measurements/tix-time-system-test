@@ -2,12 +2,12 @@ max_speed: 1500
 start_time: '00:00'
 intervals:
   - duration: 60
-    speed_percentage: 100
-  - duration: 60
-    speed_percentage: 75
-  - duration: 60
-    speed_percentage: 50
+    speed_percentage: 0
   - duration: 60
     speed_percentage: 25
   - duration: 60
-    speed_percentage: 0
+    speed_percentage: 50
+  - duration: 60
+    speed_percentage: 75
+  - duration: 60
+    speed_percentage: 100

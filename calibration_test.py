@@ -113,6 +113,7 @@ def launch_tix_client_and_torrent_manager(args):
                                  stderr=PIPE,\
                                  cwd=CURRENT_PATH)
     launch_torrent_manager(args.torrent_file_config)
+    time.sleep(60)
     tix_time_client_process.send_signal(signal.SIGINT);
 '''
 PRE: --
