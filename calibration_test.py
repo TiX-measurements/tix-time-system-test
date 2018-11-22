@@ -7,7 +7,7 @@ import time
 from definitions import *
 from pathlib import Path
 from datetime import timedelta
-from subprocess import Popen, PIPE, signal
+from subprocess import Popen, PIPE, DEVNULL, signal
 from modules.torrent_manager import *
 import pdb
 
@@ -108,9 +108,11 @@ def launch_tix_client_and_torrent_manager(args):
                                  str(args.installation),\
                                  str(args.port),\
                                  str(args.logs_path)]
+
+
     tix_time_client_process=Popen(tix_client_execution_args,\
-                                 stdout= PIPE,\
-                                 stderr=PIPE,\
+                                 stdout= open('log/client.log','w'),\
+                                 stderr=DEVNULL,\
                                  cwd=CURRENT_PATH)
     launch_torrent_manager(args.torrent_file_config)
     time.sleep(60)
