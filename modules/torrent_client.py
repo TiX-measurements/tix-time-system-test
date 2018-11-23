@@ -77,6 +77,7 @@ class TorrentClient:
 
     def __write_message(self, message):
         self.log_file.write(message)
+        self.log_file.flush()
         self.process.stdin.write(message.encode('utf-8'))
         self.process.stdin.flush()
 
