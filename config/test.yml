@@ -1,17 +1,17 @@
 max_speed_kbps: 1000
 start_time: '00:00'
 intervals:
-  - duration_in_minutes: 1
+  - duration_minutes: 1
     speed_percentage: 0
 
-  - duration_in_minutes: 1
+  - duration_minutes: 1
     speed_percentage: 25
 
-  - duration_in_minutes: 1
+  - duration_minutes: 1
     speed_percentage: 50
 
-  - duration_in_minutes: 1
+  - duration_minutes: 1
     speed_percentage: 75
     
-  - duration_in_minutes: 1
+  - duration_minutes: 1
     speed_percentage: 100
