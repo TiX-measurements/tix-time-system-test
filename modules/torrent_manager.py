@@ -29,7 +29,7 @@ class TorrentManager:
             print('{}  =>  Changed speed to {}'.format(datetime.now(),speed))
             self.torrent_client.change_max_download_speed(speed)
             
-            for i in range(0:interval['duration_minutes']):
+            for i in range(0, interval['duration_minutes']):
                 sleep(self.MINUTE_IN_SECONDS)
                 self.torrent_client.show_torrents()
 

@@ -56,11 +56,11 @@ class TorrentClient:
     def change_max_download_speed(self, speed):
         self.__write_message('set max_down '+str(speed)+'\n')
             
-        if speed == 0 && !self.idle:
+        if speed == 0 and not self.idle:
             self.idle = True
             self.show_torrents()
             self.__write_message(self.STOP_ALL_TORRENTS_COMMAND)
-        elif speed != 0 && self.idle:
+        elif speed != 0 and self.idle:
             self.idle = False
             self.show_torrents()
             self.__write_message(self.FORCE_START_ALL_COMMAND)
@@ -76,6 +76,7 @@ class TorrentClient:
         return self.LOG_FILE
 
     def __write_message(self, message):
+        self.log_file.write(message)
         self.process.stdin.write(message.encode('utf-8'))
         self.process.stdin.flush()
 
