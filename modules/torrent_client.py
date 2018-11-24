@@ -60,7 +60,7 @@ class TorrentClient:
             self.idle = True
             self.show_torrents()
             self.__write_message(self.STOP_ALL_TORRENTS_COMMAND)
-        elif speed != 0 and self.idle:
+        elif speed > 0 and self.idle:
             self.idle = False
             self.show_torrents()
             self.__write_message(self.FORCE_START_ALL_COMMAND)

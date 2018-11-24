@@ -1,16 +1,14 @@
 #!/usr/bin/python3
-import os;
+
+import os
 import subprocess
 import yaml
 import datetime
 import time
 from definitions import *
-from pathlib import Path
 from datetime import timedelta
 from subprocess import Popen, PIPE, DEVNULL, signal
 from modules.torrent_manager import *
-import pdb
-
 
 '''
 Pre: --
@@ -55,7 +53,7 @@ formato epoch.
 '''
 def save_real_start_time_epoch_in_yml_file(logs_path):
     real_start = dict(start_time= datetime.datetime.now().timestamp());
-    logsDirectory = str(Path.home()) +SLASH+logs_path;
+    logsDirectory = os.path.expanduser('~') +SLASH+logs_path;
     real_start_yml_file = logsDirectory +SLASH+REALSTARTYMLFILE;
     if not os.path.exists(logsDirectory):
         os.makedirs(logsDirectory)
@@ -133,9 +131,9 @@ if __name__ == '__main__':
         build_tix_time_client()
     with open(args.torrent_file_config, 'r') as config_stream:
         try:
-            wait_until_start_time_and_save_real_start_time_epoch_in_file(\
-                                                                config_stream,\
-                                                                args.logs_path)
+            # wait_until_start_time_and_save_real_start_time_epoch_in_file(\
+            #                                                     config_stream,\
+            #                                                     args.logs_path)
             launch_tix_client_and_torrent_manager(args)
         except yaml.YAMLError as exc:
             print(exc)
