@@ -1,28 +1,84 @@
 # tix-time-system-test
-Repository containing the scripts and queries needed to perform the System Test on the TiX System.
+Repository containing the scripts to perform the Calibration Test on the TiX System.
 
-## How to use this repo
-This repo contains many tools to perform various System tests. But the most important one are the following instructions.
+## Getting Started
 
-### How to perform a System Test
-To perform a System test first you must download a Bittorrent client. We prefer to use [Vuze](https://www.vuze.com/), 
-given its GUI and its very customizable scheduler. The next instructions are meant for that client.
+This repository contains all the tools necessary to perform calibration tests on your system. The tests were designed to run in Debian based distributions, in particular Ubuntu and Raspbian.
 
-You must create various profiles, throttling the speed at which the client will download the torrents. Once done this,
-schedule the client to use them. We like to use the following setup.
+### Prerequisites
+
+In order to run the tests, the systems needs to be able to run the tix-time-client. Therefore, the dependencies required are:
+
+* Java 8
+* Gradle
+
+### Installing
+
+To install the system test, run the following script:
+
+```bash
+git clone https://github.com/eduardoneira/tix-time-system-test
+cd tix-time-system-test
+./setup.sh
 ```
-daily pause_all from 00:00 to 01:00
-daily unlimited from 01:00 to 02:00
-daily 75_pct_speed from 02:00 to 03:00
-daily half_speed from 03:00 to 04:00
-daily 25_pct_speed from 04:00 to 05:00
-daily pause_all from 05:00 to 23:59
+
+The setup.sh script installs Python 3, PyYaml and downloads the tix-time-client repository.
+
+### Running
+
+To run the test, use the following script:
+
+```bash
+./calibration_test.py -u user -p password -i installation -P 4500 -l logs_folder -tfc torrent_file_configuration
 ```
-Once done this, you must put some torrents to download. Make sure that the total of the files will be enough for all 
-the test. We recommend using many Linux distro torrents for this (i.e.: Linux Mint, Linux Ubuntu, etc.)
 
-Turn on the TiX Client, and let the torrent download during the night.
+All the arguments must be specified to run the script.
 
-The next morning you only need to collect the data and see if the measurements are correct.
+### Test Configuration
 
-### How to use this test to collect samples for the tix-time-processor analysis notebook
+The test uses a torrent client to simulate the usage of network. The torrent client adds all the torrent files specified in [torrents](torrents). By default, 8 torrent files are included in the folder but the user can decide how many files should be downloaded depending on their Internet Connection speed and the free space on their system.
+
+```
+./torrents
+|
+|__ ubuntu-16.04.5-desktop-amd64.iso.torrent
+|__ ubuntu-16.04.5-desktop-i386.iso.torrent
+|__ ubuntu-16.04.5-server-amd64.iso.torrent
+|__ ubuntu-16.04.5-server-i386.iso.torrent
+|__ ubuntu-18.04.1-desktop-amd64.iso.torrent
+|__ ubuntu-18.04.1-live-server-amd64.iso.torrent
+|__ ubuntu-18.10-desktop-amd64.iso.torrent
+|__ ubuntu-18.10-live-server-amd64.iso.torrent
+
+```
+
+On the other hand, the user can select which torrent file configuration to use in each test. The configuration file has the following structure:
+
+```yaml
+max_speed_kBs : 1000
+start_time : '00:00'
+intervals :
+  - duration_minutes : 60
+    speed_percentage : 0
+ 
+  - duration_minutes : 60
+    speed_percentage : 25
+ 
+  - duration_minutes : 60
+    speed_percentage : 50 
+ 
+  - duration_minutes : 60
+    speed_percentage : 75
+
+  - duration_minutes : 60
+    speed_percentage : 100
+ 
+  - duration_minutes : 60
+    speed_percentage : 0
+```
+
+#### Considerations
+
+* The speed is measured in kilobytes per second
+* The start time corresponds to the time in the current or following day, but it never exceeds 24 hours
+* The intervals should be in ascending order in terms of the speed percentage to guarantee that the torrent speed is stable.

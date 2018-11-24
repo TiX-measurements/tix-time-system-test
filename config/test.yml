@@ -1,4 +1,4 @@
-max_speed_kbps: 1000
+max_speed_kBs: 1000
 start_time: '00:00'
 intervals:
   - duration_minutes: 1
