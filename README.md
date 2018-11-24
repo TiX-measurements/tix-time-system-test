@@ -36,7 +36,7 @@ All the arguments must be specified to run the script.
 
 ### Test Configuration
 
-The test uses a torrent client to simulate the usage of network. The torrent client adds all the torrent files specified in [torrents](torrents). By default, 8 torrent files are included in the folder but the user can decide how many files should be downloaded depending on their Internet Connection speed and the free space on their system.
+The test uses a torrent client to simulate the usage of network. At the beginning of the test, the torrent client adds all the torrent files specified in [torrents](torrents). By default, the following 8 torrent files are included in the folder but its contents can be modified but the user depending on the tests to run.
 
 ```
 ./torrents
@@ -82,3 +82,4 @@ intervals :
 * The speed is measured in kilobytes per second
 * The start time corresponds to the time in the current or following day, but it never exceeds 24 hours
 * The intervals should be in ascending order in terms of the speed percentage to guarantee that the torrent speed is stable.
+* Watch out for the disk space! The default number of torrents account to a total of 14 gb approximately.
