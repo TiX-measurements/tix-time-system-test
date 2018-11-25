@@ -51,14 +51,14 @@ en el path donde se guardan los archivos logs (si no existe el path, lo crea),
 y sobre este archivo escribe el valor del tiempo al momento de la ejecucion en
 formato epoch.
 '''
-def save_real_start_time_epoch_in_yml_file(logs_path):
-    real_start = dict(start_time= datetime.datetime.now().timestamp());
-    logsDirectory = os.path.expanduser('~') +SLASH+logs_path;
-    real_start_yml_file = logsDirectory +SLASH+REALSTARTYMLFILE;
+def save_real_start_time_epoch_in_yml_file(description_config, logs_path):
+    description_config[START_TIME_INDEX]= datetime.datetime.now().timestamp();
+    logsDirectory = os.path.expanduser('~') + SLASH + logs_path;
+    real_start_yml_file = logsDirectory + SLASH + TEST_DESCRIPTION_YAML;
     if not os.path.exists(logsDirectory):
         os.makedirs(logsDirectory)
     with open(real_start_yml_file, 'w') as outfile:
-        yaml.dump(real_start, outfile, default_flow_style=False)
+        yaml.dump(description_config, outfile, default_flow_style=False)
 '''
 PRE: Recibe el stream correspondiente a la apertura del archivo de configuracion
 torrent_file_config para poder obtener los valores de configuracion del torrent,
@@ -76,7 +76,7 @@ def wait_until_start_time_and_save_real_start_time_epoch_in_file(config_stream,\
     delay_seconds = get_time_delay(config[START_TIME_INDEX]);
     print('Going to wait {} minutes'.format(delay_seconds/60.0))
     time.sleep(delay_seconds);
-    save_real_start_time_epoch_in_yml_file(logs_path);
+    save_real_start_time_epoch_in_yml_file(config, logs_path);
 '''
 PRE: Recibe el path del archivo de configuracion del torrent
 (torrent_file_config)
