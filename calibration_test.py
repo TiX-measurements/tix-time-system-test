@@ -74,7 +74,7 @@ def wait_until_start_time_and_save_real_start_time_epoch_in_file(config_stream,\
                                                                  logs_path):
     config = yaml.load(config_stream);
     delay_seconds = get_time_delay(config[START_TIME_INDEX]);
-    print('Going to wait {}'.format(delay_seconds/60.0))
+    print('Going to wait {} minutes'.format(delay_seconds/60.0))
     time.sleep(delay_seconds);
     save_real_start_time_epoch_in_yml_file(logs_path);
 '''
