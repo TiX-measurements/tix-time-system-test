@@ -134,9 +134,8 @@ if __name__ == '__main__':
         build_tix_time_client()
     with open(args.torrent_file_config, 'r') as config_stream:
         try:
-             wait_until_start_time_and_save_real_start_time_epoch_in_file(\
-                                                                 config_stream,\
-                                                                 args.logs_path)
+            wait_until_start_time_and_save_real_start_time_epoch_in_file(config_stream,
+                                                                         args.logs_path)
             launch_tix_client_and_torrent_manager(args)
         except yaml.YAMLError as exc:
             print(exc)
