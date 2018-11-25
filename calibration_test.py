@@ -74,6 +74,7 @@ def wait_until_start_time_and_save_real_start_time_epoch_in_file(config_stream,\
                                                                  logs_path):
     config = yaml.load(config_stream);
     delay_seconds = get_time_delay(config[START_TIME_INDEX]);
+    print('Going to wait {}'.format(delay_seconds/60.0))
     time.sleep(delay_seconds);
     save_real_start_time_epoch_in_yml_file(logs_path);
 '''
@@ -99,6 +100,7 @@ en un subproceso. Luego lanza el TorrentManager. Tras la finalizacion del
 TorrentManager, envia SIGINT al suproceso cliente para terminarlo gracefully.
 '''
 def launch_tix_client_and_torrent_manager(args):
+    print('Launching tix client')
     tix_client_execution_args = [JAVA_COMMAND, JAVA_OPTION, \
                                  str(BUILDFILE),\
                                  str(args.username),\
@@ -112,6 +114,7 @@ def launch_tix_client_and_torrent_manager(args):
                                  stdout= open(CLIENTLOGFILEPATH,'w'),\
                                  stderr=DEVNULL,\
                                  cwd=CURRENT_PATH)
+    
     launch_torrent_manager(args.torrent_file_config)
     time.sleep(SLEEPSECONDSAFTERTORRENTFINISH)
     tix_time_client_process.send_signal(signal.SIGINT);
@@ -131,9 +134,9 @@ if __name__ == '__main__':
         build_tix_time_client()
     with open(args.torrent_file_config, 'r') as config_stream:
         try:
-            # wait_until_start_time_and_save_real_start_time_epoch_in_file(\
-            #                                                     config_stream,\
-            #                                                     args.logs_path)
+             wait_until_start_time_and_save_real_start_time_epoch_in_file(\
+                                                                 config_stream,\
+                                                                 args.logs_path)
             launch_tix_client_and_torrent_manager(args)
         except yaml.YAMLError as exc:
             print(exc)
