@@ -109,7 +109,8 @@ def launch_tix_client_and_torrent_manager(args):
                                  str(args.port),\
                                  str(args.logs_path)]
 
-
+    if (not os.path.exists(CLIENTLOGDIR)):
+        os.mkdir(CLIENTLOGDIR)
     tix_time_client_process=Popen(tix_client_execution_args,\
                                  stdout= open(CLIENTLOGFILEPATH,'w'),\
                                  stderr=DEVNULL,\

@@ -1,20 +1,20 @@
-max_speed_kBs : 1000
-start_time : '00:00'
+max_speed_kBs : 697
+start_time : '00:58'
 intervals :
   - duration_minutes : 60
-    speed_percentage : 0
+    speed_percentage : 5
  
   - duration_minutes : 60
-    speed_percentage : 25
+    speed_percentage : 30
  
   - duration_minutes : 60
-    speed_percentage : 50 
+    speed_percentage : 25 
  
   - duration_minutes : 60
-    speed_percentage : 75
+    speed_percentage : 73
 
   - duration_minutes : 60
-    speed_percentage : 100
+    speed_percentage : 97
  
   - duration_minutes : 60
-    speed_percentage : 0
+    speed_percentage : 9
