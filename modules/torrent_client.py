@@ -54,7 +54,7 @@ class TorrentClient:
         self.__write_message(self.FORCE_START_ALL_COMMAND)        
         
     def change_max_download_speed(self, speed):
-        self.__write_message('set max_down '+str(speed)+'\n')
+        self.__write_message('set max_down {}\n'.format(self.__speed_to_kBps(speed)))
             
         if speed == 0 and not self.idle:
             self.idle = True
@@ -89,3 +89,6 @@ class TorrentClient:
         
         for file in files:
             os.remove(file)
+
+    def __speed_to_kBps(speed_kbps):
+        return speed_kbps / 8

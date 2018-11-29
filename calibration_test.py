@@ -8,7 +8,7 @@ import time
 from definitions import *
 from datetime import timedelta
 from subprocess import Popen, PIPE, DEVNULL, signal
-from modules.torrent_manager import *
+from modules.test_manager import *
 
 '''
 Pre: --
@@ -83,21 +83,22 @@ PRE: Recibe el path del archivo de configuracion del torrent
 POS: Lee desde el archivo de configuracion el valor de la velocidad maxima
 de decarga y los intervalos que indican la duracion en minutos y el porcentaje
 de velocidad a utilizar en dicho intervalo. Con estos valores se crea el
-TorrentManager y se lo ejecuta. El metodo finaliza tras la finalizacion de la
-ejecucion del TorrentManager.
+TestManager y se lo ejecuta. El metodo finaliza tras la finalizacion de la
+ejecucion del TestManager.
 '''
-def launch_torrent_manager(torrent_file_config):
+def launch_test_manager(torrent_file_config):
     with open(torrent_file_config, "r") as test_configuration_file:
         test_configuration = yaml.load(test_configuration_file);
+
         max_speed = test_configuration[MAX_SPEED_INDEX];
         intervals = test_configuration[INTERVAL_INDEX];
-        torrent_manager = TorrentManager(max_speed,intervals);
+        torrent_manager = TestManager(max_speed,intervals);
         torrent_manager.run();
 '''
 PRE: Recibe los argumentos pasados por parametros
 POS: Toma los argumentos necesarios para ejecutar el cliente. Ejecuta el cliente
-en un subproceso. Luego lanza el TorrentManager. Tras la finalizacion del
-TorrentManager, envia SIGINT al suproceso cliente para terminarlo gracefully.
+en un subproceso. Luego lanza el TestManager. Tras la finalizacion del
+TestManager, envia SIGINT al suproceso cliente para terminarlo gracefully.
 '''
 def launch_tix_client_and_torrent_manager(args):
     print('Launching tix client')
@@ -116,7 +117,7 @@ def launch_tix_client_and_torrent_manager(args):
                                  stderr=DEVNULL,\
                                  cwd=CURRENT_PATH)
     
-    launch_torrent_manager(args.torrent_file_config)
+    launch_test_manager(args.torrent_file_config)
     time.sleep(SLEEPSECONDSAFTERTORRENTFINISH)
     tix_time_client_process.send_signal(signal.SIGINT);
 '''

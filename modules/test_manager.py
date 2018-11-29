@@ -5,7 +5,7 @@ import datetime
 from time import sleep
 from modules.torrent_client import *
 
-class TorrentManager:
+class TestManager:
 
     LOG_PATH        = 'log'
     CLIENT_LOG_FILE = os.path.realpath(LOG_PATH+'/torrent_client.log')
@@ -16,7 +16,7 @@ class TorrentManager:
     def __init__(self, max_speed, intervals):
         self.max_speed = max_speed
         self.intervals = intervals
-        os.makedirs(self.LOG_PATH, exist_ok=True)
+        os.makedirs(self.LOG_PATH, exist_ok=False)
         self.torrent_client = TorrentClient(self.TORRENTS_PATH,
                                             log_file=open(self.CLIENT_LOG_FILE,'w'))
 
