@@ -3,38 +3,64 @@
 import os
 import datetime
 from time import sleep
-from modules.torrent_client import *
+from modules.torrent_client import TorrentClient
+from modules.network_interface import NetworkInterface
 
 class TestManager:
 
-    LOG_PATH        = 'log'
-    CLIENT_LOG_FILE = os.path.realpath(LOG_PATH+'/torrent_client.log')
-    TORRENTS_PATH   = os.path.realpath('torrents')
+    TORRENTS_PATH              = os.path.realpath('torrents')
+    CLIENT_LOG_FILENAME        = 'torrent_client.log'
+    NETWORK_USAGE_LOG_FILENAME = 'network_usage.log'
 
     MINUTE_IN_SECONDS = 60
 
-    def __init__(self, max_speed, intervals):
+    def __init__(self, max_speed, intervals, network_interface, logs_path):
         self.max_speed = max_speed
         self.intervals = intervals
-        os.makedirs(self.LOG_PATH, exist_ok=False)
+        self.logs_path = logs_path 
+        
         self.torrent_client = TorrentClient(self.TORRENTS_PATH,
-                                            log_file=open(self.CLIENT_LOG_FILE,'w'))
+                                            log_file=open(self.__client_log_path(), 'w'))
+
+        self.network_interface = NetworkInterface(network_interface)
 
     def run(self):
+        self.downloaded_bytes = self.network_interface.downloaded_bytes()
+
         print('{}  =>  Torrent started'.format(datetime.datetime.now()))
         self.torrent_client.start()
+        
+        with open(self.__network_usage_log_path(), 'with') as network_usage_log:
+            network_usage_log.write('time_epoch|speed_kbps\n')
 
-        for interval in self.intervals:
-            speed = self.__percentage_to_speed(interval['speed_percentage'])
-            print('{}  =>  Changed speed to {}'.format(datetime.datetime.now(),speed))
-            self.torrent_client.change_max_download_speed(speed)
-            
-            for i in range(0, interval['duration_minutes']):
-                sleep(self.MINUTE_IN_SECONDS)
-                self.torrent_client.show_torrents()
+            for interval in self.intervals:
+                speed = self.__percentage_to_speed(interval['speed_percentage'])
+                print('{}  =>  Changed speed to {}'.format(datetime.datetime.now(), speed))
+                self.torrent_client.change_max_download_speed(speed)
+                
+                for i in range(0, interval['duration_minutes']):
+                    self.__log_estimated_speed(network_usage_log)
+
+                    sleep(self.MINUTE_IN_SECONDS)
+
+                    self.torrent_client.show_torrents()
 
         print('{}  =>  Torrent Stopped'.format(datetime.datetime.now()))
         self.torrent_client.stop()
 
+    def __log_estimated_speed(self, log_file):
+        updated_downloaded_bytes = self.network_interface.downloaded_bytes
+        estimated_speed_kbps = (updated_downloaded_bytes - self.downloaded_bytes) * 8 
+        
+        log_file.write('{}|{}\n'.format(datetime.datetime.now(), estimated_speed_knps))
+        
+        self.downloaded_bytes = updated_downloaded_bytes
+
     def __percentage_to_speed(self, speed_percentage):
         return int(self.max_speed * speed_percentage / 100.0)
+
+    def __client_log_path(self):
+        return '{}/{}'.format(self.logs_path, self.CLIENT_LOG_FILE)
+
+    def __network_usage_log_path(self):
+        return '{}/{}'.format(self.logs_path, self.NETWORK_USAGE_LOG_FILENAME) 

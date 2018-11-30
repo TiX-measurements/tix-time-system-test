@@ -6,7 +6,7 @@ QUESTIONTIMETOOLONG = "More than 1 day to perform test execution.\
 Continue? [y/N]"
 WRONGANSWER = "Please respond with 'yes' or 'no' " "(or 'y' or 'n').\n"
 PROGRAMEXECUTION = 'python3.5 calibration_test'
-PROGRAMDESCRIPTION= 'System test launcher'
+PROGRAMDESCRIPTION = 'System test launcher'
 PROGRAMOPTIONS = '[options]'
 LONGUSEROPTION = "--username"
 SHORTUSEROPTION = "-u"
@@ -27,22 +27,22 @@ HELPINSTALLATIONOPTION = "User 's Tix installation name"
 LONGTORRENTCONFIGOPTION = "--torrent-file-config"
 SHORTTORRENTCONFIGOPTION = "-tfc"
 HELPTORRENTCONFIGOPTION = "Torrent configuration files 's path"
-GRADLECOMMAND= 'gradle'
-GRADLEOPTIONS= ':Model:jar'
-TIX_TIME_CLIENT_PATH= "tix-time-client/"
+GRADLECOMMAND = 'gradle'
+GRADLEOPTIONS = ':Model:jar'
+TIX_TIME_CLIENT_PATH = "tix-time-client/"
 DAYSAMOUNT = 1
 SUCCESSRETURN = 0
-SLASH= "/"
-TEST_DESCRIPTION_YAML= 'description.yml'
-START_TIME_INDEX= 'start_time'
-MAX_SPEED_INDEX= 'max_speed_kbps'
+SLASH = "/"
+TEST_DESCRIPTION_YAML = 'description.yml'
+START_TIME_INDEX = 'start_time'
+MAX_SPEED_INDEX = 'max_speed_kbps'
 INTERVAL_INDEX = 'intervals'
-CURRENT_PATH="."
-JAVA_COMMAND= 'java'
-JAVA_OPTION= '-jar'
-CLIENTLOGFILEPATH = 'log/client.log'
-CLIENTLOGDIR= 'log'
+CURRENT_PATH ="."
+JAVA_COMMAND = 'java'
+JAVA_OPTION = '-jar'
+CLIENTLOGFILENAME = 'client.log'
 SLEEPSECONDSAFTERTORRENTFINISH = 60
+NETWORKINTERFACE = 'network_interface'
 '''
 PRE: --
 POS: Avisa al usuario que falta mas de un dia para la ejecucion de la prueba.

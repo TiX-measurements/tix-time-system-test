@@ -86,14 +86,16 @@ de velocidad a utilizar en dicho intervalo. Con estos valores se crea el
 TestManager y se lo ejecuta. El metodo finaliza tras la finalizacion de la
 ejecucion del TestManager.
 '''
-def launch_test_manager(torrent_file_config):
+def launch_test_manager(torrent_file_config, logs_path):
     with open(torrent_file_config, "r") as test_configuration_file:
-        test_configuration = yaml.load(test_configuration_file);
+        test_configuration = yaml.load(test_configuration_file)
 
-        max_speed = test_configuration[MAX_SPEED_INDEX];
-        intervals = test_configuration[INTERVAL_INDEX];
-        torrent_manager = TestManager(max_speed,intervals);
-        torrent_manager.run();
+        max_speed = test_configuration[MAX_SPEED_INDEX]
+        intervals = test_configuration[INTERVAL_INDEX]
+        network_interface = test_configuration[NETWORKINTERFACE]
+
+        torrent_manager = TestManager(max_speed, intervals, network_interface, logs_path)
+        torrent_manager.run()
 '''
 PRE: Recibe los argumentos pasados por parametros
 POS: Toma los argumentos necesarios para ejecutar el cliente. Ejecuta el cliente
@@ -110,14 +112,15 @@ def launch_tix_client_and_torrent_manager(args):
                                  str(args.port),\
                                  str(args.logs_path)]
 
-    if (not os.path.exists(CLIENTLOGDIR)):
-        os.mkdir(CLIENTLOGDIR)
+    logs_realpath = '~/{}'.format(args.logs_path)
+    os.makedirs(logs_filepath, exist_ok=True)
+
     tix_time_client_process=Popen(tix_client_execution_args,\
-                                 stdout= open(CLIENTLOGFILEPATH,'w'),\
+                                 stdout=open('{}/{}'.format(logs_realpath, CLIENTLOGFILENAME), 'w'),\
                                  stderr=DEVNULL,\
                                  cwd=CURRENT_PATH)
     
-    launch_test_manager(args.torrent_file_config)
+    launch_test_manager(args.torrent_file_config, logs_realpath)
     time.sleep(SLEEPSECONDSAFTERTORRENTFINISH)
     tix_time_client_process.send_signal(signal.SIGINT);
 '''
