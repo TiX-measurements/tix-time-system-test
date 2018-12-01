@@ -18,9 +18,9 @@ HELPPASSOPTION = "Tix 's password"
 LONGPORTOPTION = "--port"
 SHORTPORTOPTION = "-P"
 HELPPORTOPTION = "Local port to receive incoming packages"
-LONGLOGSPATHOPTION = "--logs_path"
-SHORTLOGSPATHOPTION = "-l"
-HELPLOGSPATHOPTION = "Logs files 's destination path"
+LONGLOGSDIROPTION = "--logs_dir"
+SHORTLOGSDIROPTION = "-l"
+HELPLOGSDIROPTION = "Logs files 's destination directory"
 LONGINSTALLATIONOPTION = "--installation"
 SHORTINSTALLATIONOPTION = "-i"
 HELPINSTALLATIONOPTION = "User 's Tix installation name"
@@ -43,6 +43,7 @@ JAVA_OPTION = '-jar'
 CLIENTLOGFILENAME = 'client.log'
 SLEEPSECONDSAFTERTORRENTFINISH = 60
 NETWORKINTERFACE = 'network_interface'
+TIXTIMECLIENTLOGDIR = 'tix-time-client-logs'
 '''
 PRE: --
 POS: Avisa al usuario que falta mas de un dia para la ejecucion de la prueba.
@@ -86,8 +87,8 @@ def get_and_check_parse_arguments():
     required_named.add_argument(LONGPORTOPTION,SHORTPORTOPTION,\
                                 help=HELPPORTOPTION,\
                                 required = True);
-    required_named.add_argument(LONGLOGSPATHOPTION,SHORTLOGSPATHOPTION,\
-                                help=HELPLOGSPATHOPTION,\
+    required_named.add_argument(LONGLOGSDIROPTION,SHORTLOGSDIROPTION,\
+                                help=HELPLOGSDIROPTION,\
                                 required = True);
     required_named.add_argument(LONGINSTALLATIONOPTION,SHORTINSTALLATIONOPTION,\
                                 help=HELPINSTALLATIONOPTION,\

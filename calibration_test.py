@@ -110,9 +110,9 @@ def launch_tix_client_and_torrent_manager(args):
                                  str(args.password),\
                                  str(args.installation),\
                                  str(args.port),\
-                                 str(args.logs_path)]
+                                 '{}/{}'.format(args.logs_dir,TIXTIMECLIENTLOGDIR)]
 
-    logs_realpath = '{}/{}'.format(os.path.expanduser('~'),args.logs_path)
+    logs_realpath = '{}/{}'.format(os.path.expanduser('~'),args.logs_dir)
     os.makedirs(logs_realpath, exist_ok=True)
 
     tix_time_client_process=Popen(tix_client_execution_args,\
@@ -140,7 +140,7 @@ if __name__ == '__main__':
     with open(args.torrent_file_config, 'r') as config_stream:
         try:
             wait_until_start_time_and_save_real_start_time_epoch_in_file(config_stream,
-                                                                         args.logs_path)
+                                                                         args.logs_dir)
             launch_tix_client_and_torrent_manager(args)
         except yaml.YAMLError as exc:
             print(exc)

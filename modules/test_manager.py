@@ -47,8 +47,9 @@ class TestManager:
                     
                     self.torrent_client.show_torrents()
 
-        print('{}  =>  Torrent Stopped'.format(datetime.datetime.now()))
+        print('{}  =>  Stopping Torrent'.format(datetime.datetime.now()))
         self.torrent_client.stop()
+        print('{}  =>  Torrent Stopped'.format(datetime.datetime.now()))
 
     def __log_estimated_speed(self, log_file):
         updated_downloaded_bytes = self.network_interface.downloaded_bytes()

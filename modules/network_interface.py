@@ -9,7 +9,7 @@ class NetworkInterface:
 
     def downloaded_bytes(self):
         command = ['cat /sys/class/net/{}/statistics/rx_bytes'.format(self.interface)]
-        process = Popen(command, stdout=PIPE, shell=True)
+        process = Popen(command, stdin=None, stdout=PIPE, stderr=None, shell=True)
 
         stdout, stderr = process.communicate()
 

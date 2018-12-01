@@ -3,7 +3,7 @@
 import os
 import glob
 from time import sleep
-from subprocess import Popen, call, PIPE, DEVNULL
+from subprocess import Popen, PIPE, DEVNULL
 
 class TorrentClient:
 
@@ -39,20 +39,19 @@ class TorrentClient:
                              stderr=DEVNULL,
                              cwd=self.cwd)
 
-        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+        
         self.__write_message(self.SET_MAX_UPLOAD_0)
         self.__write_message(self.LOG_OFF_COMMAND)
         self.__write_message(self.SET_DEFAULT_SAVE_PATH)
-        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+
         self.show_torrents()
-        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
         self.__write_message(self.REMOVE_ALL_TORRENTS_COMMAND)
-        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
-        self.__delete_torrents_downloaded()
+        self.delete_torrents_downloaded()
+        
         self.__write_message(self.__add_all_torrents_command())
-        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+        
         self.show_torrents()
-        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+        
         self.__write_message(self.FORCE_START_ALL_COMMAND)        
         
     def change_max_download_speed(self, speed):
@@ -72,26 +71,33 @@ class TorrentClient:
 
     def stop(self):
         self.__write_message(self.QUIT_COMMAND)
-        self.process.wait() 
+        self.process.wait()
+        self.delete_torrents_downloaded() 
 
     def clean_torrent_downloads(self):
         files = glob.glob(self.DOWNLOAD_PATH+'/*')
         
         for file in files:
-            call(['cat /dev/null > {}'.format(file)], shell=True)
+            Popen(['cat /dev/null > {}'.format(file)], 
+                    shell=True,
+                    stdin=None, 
+                    stdout=None, 
+                    stderr=None, 
+                    close_fds=True)
 
-    def __write_message(self, message):
-        self.process.stdin.write(message.encode('utf-8'))
-        self.process.stdin.flush()
-
-    def __add_all_torrents_command(self):
-        return 'add '+self.torrents_path+'\n'
-
-    def __delete_torrents_downloaded(self):
+    def delete_torrents_downloaded(self):
         files = glob.glob(self.DOWNLOAD_PATH+'/*')
         
         for file in files:
             os.remove(file)
+
+    def __write_message(self, message):
+        self.process.stdin.write(message.encode('utf-8'))
+        self.process.stdin.flush()
+        sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+
+    def __add_all_torrents_command(self):
+        return 'add '+self.torrents_path+'\n'
 
     def __speed_to_kBps(self, speed_kbps):
         return speed_kbps // 8
