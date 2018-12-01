@@ -43,6 +43,8 @@ class TestManager:
 
                     sleep(self.MINUTE_IN_SECONDS)
 
+                    self.torrent_client.clean_torrent_downloads()
+                    
                     self.torrent_client.show_torrents()
 
         print('{}  =>  Torrent Stopped'.format(datetime.datetime.now()))

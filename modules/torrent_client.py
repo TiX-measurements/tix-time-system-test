@@ -3,7 +3,7 @@
 import os
 import glob
 from time import sleep
-from subprocess import Popen, PIPE, DEVNULL
+from subprocess import Popen, call, PIPE, DEVNULL
 
 class TorrentClient:
 
@@ -72,10 +72,13 @@ class TorrentClient:
 
     def stop(self):
         self.__write_message(self.QUIT_COMMAND)
-        self.process.wait()    
+        self.process.wait() 
 
-    def log_file(self):
-        return self.LOG_FILE
+    def clean_torrent_downloads(self):
+        files = glob.glob(self.DOWNLOAD_PATH+'/*')
+        
+        for file in files:
+            call(['cat /dev/null > {}'.format(file)], shell=True)
 
     def __write_message(self, message):
         self.process.stdin.write(message.encode('utf-8'))
