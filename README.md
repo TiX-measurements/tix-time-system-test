@@ -29,10 +29,31 @@ The setup.sh script installs Python 3, PyYaml and downloads the tix-time-client 
 To run the test, use the following script:
 
 ```bash
-./calibration_test.py -u user -p password -i installation -P 4500 -l logs_folder -tfc torrent_file_configuration
+./calibration_test.py -u user -p password -i installation -P 4500 -l logs_directory -tfc test_file_configuration
 ```
 
-All the arguments must be specified to run the script.
+All the arguments must be specified to run the script. The result after the test finishes is saved in the logs_directory with the following structure:
+
+
+```
+./logs_directory/
+|
+|__ client.log
+|__ network_usage.log
+|__ torrent_client.log
+|__ description.yml
+|__ tix-time-client-logs/
+    |__ 1-tix-log.json
+    |__ 2-tix-log.json
+    |__ ...
+
+```
+
+* client.log : Log with stdout of tix-time-client spawned during calibration test
+* network_usage.log : Log with the estimated download speed from the local interface
+* torrent_client.log : Log with stdout of torrent client spawned during calibration test
+* description.yml : Test configuration file used during test
+* tix-time-client-logs/ : Directory for tix-time-client log files
 
 ### Test Configuration
 
@@ -41,6 +62,19 @@ The test uses a torrent client to simulate the usage of network. At the beginnin
 ```
 ./torrents
 |
+|__ linuxmint-17-cinnamon-32bit-v2.iso.torrent
+|__ linuxmint-17-cinnamon-64bit-v2.iso.torrent
+|__ linuxmint-17-cinnamon-nocodecs-32bit-v2.iso.torrent
+|__ linuxmint-17-cinnamon-nocodecs-64bit-v2.iso.torrent
+|__ linuxmint-17-cinnamon-oem-64bit-v2.iso.torrent
+|__ linuxmint-17-kde-dvd-32bit.iso.torrent
+|__ linuxmint-17-kde-dvd-64bit.iso.torrent
+|__ linuxmint-17-mate-32bit-v2.iso.torrent
+|__ linuxmint-17-mate-64bit-v2.iso.torrent
+|__ ubuntu-14.04.5-desktop-amd64.iso.torrent
+|__ ubuntu-14.04.5-desktop-i386.iso.torrent
+|__ ubuntu-14.04.5-server-amd64.iso.torrent
+|__ ubuntu-14.04.5-server-i386.iso.torrent
 |__ ubuntu-16.04.5-desktop-amd64.iso.torrent
 |__ ubuntu-16.04.5-desktop-i386.iso.torrent
 |__ ubuntu-16.04.5-server-amd64.iso.torrent
@@ -52,10 +86,11 @@ The test uses a torrent client to simulate the usage of network. At the beginnin
 
 ```
 
-On the other hand, the user can select which torrent file configuration to use in each test. The configuration file has the following structure:
+On the other hand, the user can select which test file configuration to use in each test. The configuration file has the following structure:
 
 ```yaml
-max_speed_kBs : 1000
+max_speed_kbps : 12000
+network_interface: 'wlan0'
 start_time : '00:00'
 intervals :
   - duration_minutes : 60
@@ -79,7 +114,6 @@ intervals :
 
 #### Considerations
 
-* The speed is measured in kilobytes per second
+* The speed is measured in kilobits per second
 * The start time corresponds to the time in the current or following day, but it never exceeds 24 hours
-* The intervals should be in ascending order in terms of the speed percentage to guarantee that the torrent speed is stable.
-* Watch out for the disk space! The default number of torrents account to a total of 14 gb approximately.
+* The intervals should be in ascending order in terms of the speed percentage to guarantee that the torrent speed is stable
