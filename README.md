@@ -37,16 +37,15 @@ All the arguments must be specified to run the script. The result after the test
 
 ```
 ./logs_directory/
-|
-|__ client.log
-|__ network_usage.log
-|__ torrent_client.log
-|__ description.yml
-|__ tix-time-client-logs/
-    |__ 1-tix-log.json
-    |__ 2-tix-log.json
-    |__ ...
-
+  |
+  |__ client.log
+  |__ network_usage.log
+  |__ torrent_client.log
+  |__ description.yml
+  |__ tix-time-client-logs/
+      |__ 1-tix-log.json
+      |__ 2-tix-log.json
+      |__ ...
 ```
 
 * client.log : Log with stdout of tix-time-client spawned during calibration test
@@ -60,30 +59,29 @@ All the arguments must be specified to run the script. The result after the test
 The test uses a torrent client to simulate the usage of network. At the beginning of the test, the torrent client adds all the torrent files specified in [torrents](torrents). By default, the following 8 torrent files are included in the folder but its contents can be modified but the user depending on the tests to run.
 
 ```
-./torrents
-|
-|__ linuxmint-17-cinnamon-32bit-v2.iso.torrent
-|__ linuxmint-17-cinnamon-64bit-v2.iso.torrent
-|__ linuxmint-17-cinnamon-nocodecs-32bit-v2.iso.torrent
-|__ linuxmint-17-cinnamon-nocodecs-64bit-v2.iso.torrent
-|__ linuxmint-17-cinnamon-oem-64bit-v2.iso.torrent
-|__ linuxmint-17-kde-dvd-32bit.iso.torrent
-|__ linuxmint-17-kde-dvd-64bit.iso.torrent
-|__ linuxmint-17-mate-32bit-v2.iso.torrent
-|__ linuxmint-17-mate-64bit-v2.iso.torrent
-|__ ubuntu-14.04.5-desktop-amd64.iso.torrent
-|__ ubuntu-14.04.5-desktop-i386.iso.torrent
-|__ ubuntu-14.04.5-server-amd64.iso.torrent
-|__ ubuntu-14.04.5-server-i386.iso.torrent
-|__ ubuntu-16.04.5-desktop-amd64.iso.torrent
-|__ ubuntu-16.04.5-desktop-i386.iso.torrent
-|__ ubuntu-16.04.5-server-amd64.iso.torrent
-|__ ubuntu-16.04.5-server-i386.iso.torrent
-|__ ubuntu-18.04.1-desktop-amd64.iso.torrent
-|__ ubuntu-18.04.1-live-server-amd64.iso.torrent
-|__ ubuntu-18.10-desktop-amd64.iso.torrent
-|__ ubuntu-18.10-live-server-amd64.iso.torrent
-
+./torrents/
+  |
+  |__ linuxmint-17-cinnamon-32bit-v2.iso.torrent
+  |__ linuxmint-17-cinnamon-64bit-v2.iso.torrent
+  |__ linuxmint-17-cinnamon-nocodecs-32bit-v2.iso.torrent
+  |__ linuxmint-17-cinnamon-nocodecs-64bit-v2.iso.torrent
+  |__ linuxmint-17-cinnamon-oem-64bit-v2.iso.torrent
+  |__ linuxmint-17-kde-dvd-32bit.iso.torrent
+  |__ linuxmint-17-kde-dvd-64bit.iso.torrent
+  |__ linuxmint-17-mate-32bit-v2.iso.torrent
+  |__ linuxmint-17-mate-64bit-v2.iso.torrent
+  |__ ubuntu-14.04.5-desktop-amd64.iso.torrent
+  |__ ubuntu-14.04.5-desktop-i386.iso.torrent
+  |__ ubuntu-14.04.5-server-amd64.iso.torrent
+  |__ ubuntu-14.04.5-server-i386.iso.torrent
+  |__ ubuntu-16.04.5-desktop-amd64.iso.torrent
+  |__ ubuntu-16.04.5-desktop-i386.iso.torrent
+  |__ ubuntu-16.04.5-server-amd64.iso.torrent
+  |__ ubuntu-16.04.5-server-i386.iso.torrent
+  |__ ubuntu-18.04.1-desktop-amd64.iso.torrent
+  |__ ubuntu-18.04.1-live-server-amd64.iso.torrent
+  |__ ubuntu-18.10-desktop-amd64.iso.torrent
+  |__ ubuntu-18.10-live-server-amd64.iso.torrent
 ```
 
 On the other hand, the user can select which test file configuration to use in each test. The configuration file has the following structure:
