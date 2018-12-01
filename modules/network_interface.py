@@ -1,6 +1,6 @@
 #!/bin/python3
 
-from subprocess import Popen
+from subprocess import Popen, PIPE
 
 class NetworkInterface:
 
@@ -8,12 +8,10 @@ class NetworkInterface:
         self.interface = interface
 
     def downloaded_bytes(self):
-        command = ['cat', '/sys/class/net/{}/statistics/rx_bytes'.format(self.interface)]
-        process = subprocess.Popen(command, 
-                                   stdout=subprocess.PIPE, 
-                                   shell=True)
+        command = ['cat /sys/class/net/{}/statistics/rx_bytes'.format(self.interface)]
+        process = Popen(command, stdout=PIPE, shell=True)
 
         stdout, stderr = process.communicate()
 
-        return int(stdout)
+        return int(stdout.decode('utf8').strip())
     

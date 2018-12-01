@@ -21,6 +21,7 @@ class TorrentClient:
     FORCE_START_ALL_COMMAND     = 'forcestart all\n'
     STOP_ALL_TORRENTS_COMMAND   = 'stop all\n'
     SET_DEFAULT_SAVE_PATH       = 'set "Default save path" "' + DOWNLOAD_PATH + '" string\n'
+    SET_MAX_UPLOAD_0            = 'set max_up 0'
 
     def __init__(self, torrents_path, cwd=CWD, log_file=DEVNULL):
         self.process = None
@@ -39,6 +40,7 @@ class TorrentClient:
                              cwd=self.cwd)
 
         sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
+        self.__write_message(self.SET_MAX_UPLOAD_0)
         self.__write_message(self.LOG_OFF_COMMAND)
         self.__write_message(self.SET_DEFAULT_SAVE_PATH)
         sleep(self.WAIT_TIME_BETWEEN_COMMANDS)
@@ -76,8 +78,6 @@ class TorrentClient:
         return self.LOG_FILE
 
     def __write_message(self, message):
-        self.log_file.write(message)
-        self.log_file.flush()
         self.process.stdin.write(message.encode('utf-8'))
         self.process.stdin.flush()
 
@@ -90,5 +90,5 @@ class TorrentClient:
         for file in files:
             os.remove(file)
 
-    def __speed_to_kBps(speed_kbps):
-        return speed_kbps / 8
+    def __speed_to_kBps(self, speed_kbps):
+        return speed_kbps // 8

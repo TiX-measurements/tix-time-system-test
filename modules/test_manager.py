@@ -2,7 +2,7 @@
 
 import os
 import datetime
-from time import sleep
+from time import sleep, time
 from modules.torrent_client import TorrentClient
 from modules.network_interface import NetworkInterface
 
@@ -30,7 +30,7 @@ class TestManager:
         print('{}  =>  Torrent started'.format(datetime.datetime.now()))
         self.torrent_client.start()
         
-        with open(self.__network_usage_log_path(), 'with') as network_usage_log:
+        with open(self.__network_usage_log_path(), 'w') as network_usage_log:
             network_usage_log.write('time_epoch|speed_kbps\n')
 
             for interval in self.intervals:
@@ -49,10 +49,10 @@ class TestManager:
         self.torrent_client.stop()
 
     def __log_estimated_speed(self, log_file):
-        updated_downloaded_bytes = self.network_interface.downloaded_bytes
+        updated_downloaded_bytes = self.network_interface.downloaded_bytes()
         estimated_speed_kbps = (updated_downloaded_bytes - self.downloaded_bytes) * 8 
         
-        log_file.write('{}|{}\n'.format(datetime.datetime.now(), estimated_speed_knps))
+        log_file.write('{}|{}\n'.format(time(), estimated_speed_kbps))
         
         self.downloaded_bytes = updated_downloaded_bytes
 
@@ -60,7 +60,7 @@ class TestManager:
         return int(self.max_speed * speed_percentage / 100.0)
 
     def __client_log_path(self):
-        return '{}/{}'.format(self.logs_path, self.CLIENT_LOG_FILE)
+        return '{}/{}'.format(self.logs_path, self.CLIENT_LOG_FILENAME)
 
     def __network_usage_log_path(self):
         return '{}/{}'.format(self.logs_path, self.NETWORK_USAGE_LOG_FILENAME) 

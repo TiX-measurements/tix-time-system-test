@@ -8,7 +8,7 @@ import time
 from definitions import *
 from datetime import timedelta
 from subprocess import Popen, PIPE, DEVNULL, signal
-from modules.test_manager import *
+from modules.test_manager import TestManager
 
 '''
 Pre: --
@@ -94,8 +94,8 @@ def launch_test_manager(torrent_file_config, logs_path):
         intervals = test_configuration[INTERVAL_INDEX]
         network_interface = test_configuration[NETWORKINTERFACE]
 
-        torrent_manager = TestManager(max_speed, intervals, network_interface, logs_path)
-        torrent_manager.run()
+    test_manager = TestManager(max_speed, intervals, network_interface, logs_path)
+    test_manager.run()
 '''
 PRE: Recibe los argumentos pasados por parametros
 POS: Toma los argumentos necesarios para ejecutar el cliente. Ejecuta el cliente
@@ -112,8 +112,8 @@ def launch_tix_client_and_torrent_manager(args):
                                  str(args.port),\
                                  str(args.logs_path)]
 
-    logs_realpath = '~/{}'.format(args.logs_path)
-    os.makedirs(logs_filepath, exist_ok=True)
+    logs_realpath = '{}/{}'.format(os.path.expanduser('~'),args.logs_path)
+    os.makedirs(logs_realpath, exist_ok=True)
 
     tix_time_client_process=Popen(tix_client_execution_args,\
                                  stdout=open('{}/{}'.format(logs_realpath, CLIENTLOGFILENAME), 'w'),\

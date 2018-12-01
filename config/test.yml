@@ -1,6 +1,6 @@
-max_speed_kbps: 1000
+max_speed_kbps: 24000
 network_interface: 'wlp1s0'
-start_time: '00:00'
+start_time: '22:32'
 intervals:
   - duration_minutes: 1
     speed_percentage: 0
@@ -16,3 +16,6 @@ intervals:
     
   - duration_minutes: 1
     speed_percentage: 100
+
+  - duration_minutes: 1
+    speed_percentage: 0
