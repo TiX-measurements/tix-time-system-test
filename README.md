@@ -10,7 +10,7 @@ This repository contains all the tools necessary to perform calibration tests on
 In order to run the tests, the systems needs to be able to run the tix-time-client. Therefore, the dependencies required are:
 
 * Java 8
-* Gradle
+* Gradle 3
 
 ### Installing
 
