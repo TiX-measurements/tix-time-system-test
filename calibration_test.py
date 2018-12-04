@@ -1,4 +1,10 @@
 #!/usr/bin/python3
+#
+#   File: calibration_test.py
+#
+#   Modified by: 
+#       Eduardo Neira, Luis Ali on November 2018 under the course 'Taller de Programacion 3' in the University of Buenos Aires 
+#
 
 import os
 import subprocess
@@ -17,11 +23,11 @@ nivel en el file system que este mismo archivo (calibration_test.py).
 Este metodo espera a que termina el build y finaliza.
 '''
 def build_tix_time_client():
-    gradle_build_process=Popen([GRADLECOMMAND, GRADLEOPTIONS],\
-                               stdout=PIPE,\
-                               stderr=PIPE,\
+    gradle_build_process=Popen([GRADLECOMMAND, GRADLEOPTIONS],
+                               stdout=PIPE,
+                               stderr=PIPE,
                                cwd=TIX_TIME_CLIENT_PATH)
-    gradle_build_process.wait();
+    gradle_build_process.wait()
 '''
 PRE: Recibe el tiempo de inicio de la prueba, leido desde el archivo de
 configuracion pasado por parametro (torrent-file-config)
@@ -34,15 +40,15 @@ igual a 15:30 y se ejecuta calibration_test a las 15:35, se agrega un retardo de
 ejecucion de un 1 dia. Hay que esperar hasta las 15:30 del dia siguiente.
 '''
 def get_time_delay(start_value):
-    now = datetime.datetime.now();
+    now = datetime.datetime.now()
     start_time_string_representation =now.strftime('%Y-%m-%d')+":"+ start_value
-    start= datetime.datetime.strptime(start_time_string_representation,\
-                                      '%Y-%m-%d:%H:%M');
+    start= datetime.datetime.strptime(start_time_string_representation,
+                                      '%Y-%m-%d:%H:%M')
     if (now > start):
         if (continue_execution_if_time_too_long()):
-            start = start + timedelta(days=DAYSAMOUNT);
+            start = start + timedelta(days=DAYSAMOUNT)
         else:
-            sys.exit(SUCCESSRETURN);
+            sys.exit(SUCCESSRETURN)
     return (start - now).total_seconds()
 '''
 PRE: Recibe el path donde se guardan los archivos logs
@@ -52,9 +58,9 @@ y sobre este archivo escribe el valor del tiempo al momento de la ejecucion en
 formato epoch.
 '''
 def save_real_start_time_epoch_in_yml_file(description_config, logs_path):
-    description_config[START_TIME_INDEX]= datetime.datetime.now().timestamp();
-    logsDirectory = os.path.expanduser('~') + SLASH + logs_path;
-    real_start_yml_file = logsDirectory + SLASH + TEST_DESCRIPTION_YAML;
+    description_config[START_TIME_INDEX]= datetime.datetime.now().timestamp()
+    logsDirectory = os.path.expanduser('~') + SLASH + logs_path
+    real_start_yml_file = logsDirectory + SLASH + TEST_DESCRIPTION_YAML
     if not os.path.exists(logsDirectory):
         os.makedirs(logsDirectory)
     with open(real_start_yml_file, 'w') as outfile:
@@ -70,13 +76,13 @@ la diferencia entre este tiempo obtenido y el tiempo actual
 ese tiempo, guarda el tiempo de ejecucion en ese preciso momento en el
 archivo start_time.yml en la carpeta donde se guardan los logs
 '''
-def wait_until_start_time_and_save_real_start_time_epoch_in_file(config_stream,\
+def wait_until_start_time_and_save_real_start_time_epoch_in_file(config_stream,
                                                                  logs_path):
-    config = yaml.load(config_stream);
-    delay_seconds = get_time_delay(config[START_TIME_INDEX]);
+    config = yaml.load(config_stream)
+    delay_seconds = get_time_delay(config[START_TIME_INDEX])
     print('Going to wait {} minutes'.format(delay_seconds/60.0))
-    time.sleep(delay_seconds);
-    save_real_start_time_epoch_in_yml_file(config, logs_path);
+    time.sleep(delay_seconds)
+    save_real_start_time_epoch_in_yml_file(config, logs_path)
 '''
 PRE: Recibe el path del archivo de configuracion del torrent
 (torrent_file_config)
@@ -104,25 +110,25 @@ TestManager, envia SIGINT al suproceso cliente para terminarlo gracefully.
 '''
 def launch_tix_client_and_torrent_manager(args):
     print('Launching tix client')
-    tix_client_execution_args = [JAVA_COMMAND, JAVA_OPTION, \
-                                 str(BUILDFILE),\
-                                 str(args.username),\
-                                 str(args.password),\
-                                 str(args.installation),\
-                                 str(args.port),\
+    tix_client_execution_args = [JAVA_COMMAND, JAVA_OPTION, 
+                                 str(BUILDFILE),
+                                 str(args.username),
+                                 str(args.password),
+                                 str(args.installation),
+                                 str(args.port),
                                  '{}/{}'.format(args.logs_dir,TIXTIMECLIENTLOGDIR)]
 
     logs_realpath = '{}/{}'.format(os.path.expanduser('~'),args.logs_dir)
     os.makedirs(logs_realpath, exist_ok=True)
 
-    tix_time_client_process=Popen(tix_client_execution_args,\
-                                 stdout=open('{}/{}'.format(logs_realpath, CLIENTLOGFILENAME), 'w'),\
-                                 stderr=DEVNULL,\
+    tix_time_client_process=Popen(tix_client_execution_args,
+                                 stdout=open('{}/{}'.format(logs_realpath, CLIENTLOGFILENAME), 'w'),
+                                 stderr=DEVNULL,
                                  cwd=CURRENT_PATH)
     
     launch_test_manager(args.torrent_file_config, logs_realpath)
     time.sleep(SLEEPSECONDSAFTERTORRENTFINISH)
-    tix_time_client_process.send_signal(signal.SIGINT);
+    tix_time_client_process.send_signal(signal.SIGINT)
 '''
 PRE: --
 POS: Leer el yaml al principio para saber cuando empizan los tests (start time).
@@ -134,7 +140,7 @@ POS: Leer el yaml al principio para saber cuando empizan los tests (start time).
  Mandar la senal SIGINT
 '''
 if __name__ == '__main__':
-    args= get_and_check_parse_arguments();
+    args= get_and_check_parse_arguments()
     if (not os.path.exists(BUILDFILE)):
         build_tix_time_client()
     with open(args.torrent_file_config, 'r') as config_stream:

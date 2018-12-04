@@ -74,27 +74,27 @@ Si todos los argumentos requeridos estan presenes entonces devuelve una
 estructura con los argumentos disponibles para su posterior uso.
 '''
 def get_and_check_parse_arguments():
-    parser = argparse.ArgumentParser(prog=PROGRAMEXECUTION, \
-                                     usage='%(prog)s '+ PROGRAMOPTIONS,\
+    parser = argparse.ArgumentParser(prog=PROGRAMEXECUTION, 
+                                     usage='%(prog)s '+ PROGRAMOPTIONS,
                                      description = PROGRAMDESCRIPTION)
     required_named = parser.add_argument_group(REQUIREDARGGROUP)
-    required_named.add_argument(LONGUSEROPTION, SHORTUSEROPTION, \
-                                help=HELPUSEROPTION,\
+    required_named.add_argument(LONGUSEROPTION, SHORTUSEROPTION, 
+                                help=HELPUSEROPTION,
                                 required = True)
-    required_named.add_argument(LONGPASSOPTION,SHORTPASSOPTION,\
-                                help=HELPPASSOPTION,\
+    required_named.add_argument(LONGPASSOPTION,SHORTPASSOPTION,
+                                help=HELPPASSOPTION,
                                 required = True);
-    required_named.add_argument(LONGPORTOPTION,SHORTPORTOPTION,\
-                                help=HELPPORTOPTION,\
+    required_named.add_argument(LONGPORTOPTION,SHORTPORTOPTION,
+                                help=HELPPORTOPTION,
                                 required = True);
-    required_named.add_argument(LONGLOGSDIROPTION,SHORTLOGSDIROPTION,\
-                                help=HELPLOGSDIROPTION,\
+    required_named.add_argument(LONGLOGSDIROPTION,SHORTLOGSDIROPTION,
+                                help=HELPLOGSDIROPTION,
                                 required = True);
-    required_named.add_argument(LONGINSTALLATIONOPTION,SHORTINSTALLATIONOPTION,\
-                                help=HELPINSTALLATIONOPTION,\
+    required_named.add_argument(LONGINSTALLATIONOPTION,SHORTINSTALLATIONOPTION,
+                                help=HELPINSTALLATIONOPTION,
                                 required = True);
-    required_named.add_argument(LONGTORRENTCONFIGOPTION,\
-                                SHORTTORRENTCONFIGOPTION,\
-                                help=HELPTORRENTCONFIGOPTION,\
+    required_named.add_argument(LONGTORRENTCONFIGOPTION,
+                                SHORTTORRENTCONFIGOPTION,
+                                help=HELPTORRENTCONFIGOPTION,
                                 required = True);
     return parser.parse_args()

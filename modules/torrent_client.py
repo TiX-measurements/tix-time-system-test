@@ -1,4 +1,10 @@
 #!/usr/bin/python3
+#
+#   File: calibration_test.py
+#
+#   Modified by: 
+#       Eduardo Neira on November 2018 under the course 'Taller de Programacion 3' in the University of Buenos Aires 
+#
 
 import os
 import glob
