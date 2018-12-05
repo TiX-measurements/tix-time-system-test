@@ -141,8 +141,10 @@ POS: Leer el yaml al principio para saber cuando empizan los tests (start time).
 '''
 if __name__ == '__main__':
     args= get_and_check_parse_arguments()
+
     if (not os.path.exists(BUILDFILE)):
         build_tix_time_client()
+
     with open(args.torrent_file_config, 'r') as config_stream:
         try:
             wait_until_start_time_and_save_real_start_time_epoch_in_file(config_stream,

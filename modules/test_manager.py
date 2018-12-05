@@ -45,7 +45,7 @@ class TestManager:
                 self.torrent_client.change_max_download_speed(speed)
                 
                 for i in range(0, interval['duration_minutes']):
-                    self.__log_estimated_speed(network_usage_log)
+                    self.__log_estimated_speed(network_usage_log, self.MINUTE_IN_SECONDS)
 
                     sleep(self.MINUTE_IN_SECONDS)
 
@@ -57,9 +57,9 @@ class TestManager:
         self.torrent_client.stop()
         print('{}  =>  Torrent Stopped'.format(datetime.datetime.now()))
 
-    def __log_estimated_speed(self, log_file):
+    def __log_estimated_speed(self, log_file, delta_time):
         updated_downloaded_bytes = self.network_interface.downloaded_bytes()
-        estimated_speed_kbps = (updated_downloaded_bytes - self.downloaded_bytes) * 8 
+        estimated_speed_kbps = (updated_downloaded_bytes - self.downloaded_bytes) * 8 / (1000 * delta_time)  
         
         log_file.write('{}|{}\n'.format(time(), estimated_speed_kbps))
         
