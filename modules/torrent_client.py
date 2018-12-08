@@ -13,7 +13,6 @@ from subprocess import Popen, PIPE, DEVNULL
 
 class TorrentClient:
 
-    WAIT_UNTIL_DEAD_TIME       = 5
     WAIT_TIME_BETWEEN_COMMANDS = 1
 
     CWD = os.path.realpath('torrent_client')
@@ -27,7 +26,7 @@ class TorrentClient:
     FORCE_START_ALL_COMMAND     = 'forcestart all\n'
     STOP_ALL_TORRENTS_COMMAND   = 'stop all\n'
     SET_DEFAULT_SAVE_PATH       = 'set "Default save path" "' + DOWNLOAD_PATH + '" string\n'
-    SET_MAX_UPLOAD_0            = 'set max_up 0'
+    SET_MAX_UPLOAD_0            = 'set max_up 0\n'
 
     def __init__(self, torrents_path, cwd=CWD, log_file=DEVNULL):
         self.process = None

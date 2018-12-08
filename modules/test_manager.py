@@ -59,6 +59,7 @@ class TestManager:
 
     def __log_estimated_speed(self, log_file, delta_time):
         updated_downloaded_bytes = self.network_interface.downloaded_bytes()
+        
         estimated_speed_kbps = (updated_downloaded_bytes - self.downloaded_bytes) * 8 / (1000 * delta_time)  
         
         log_file.write('{}|{}\n'.format(time(), estimated_speed_kbps))
