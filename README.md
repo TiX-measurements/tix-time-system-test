@@ -22,7 +22,7 @@ cd tix-time-system-test
 ./setup.sh
 ```
 
-The setup.sh script installs Python 3, PyYaml and downloads the `tix-time-client` repository.
+The setup.sh script installs Python 3, PyYaml and downloads the `tix-time-client` repository. Apart from the system test project, the torrent client needs to be downloaded. Therefore, follow the instructions in [INSTALL.md](torrent_client/INSTALL.md)
 
 ### Running
 
@@ -61,8 +61,6 @@ After the test finishes, the results are stored in the logs_directory with the f
   |__ torrent_client.log
   |__ description.yml
   |__ tix-time-client-logs/
-      |__ 1-tix-log.json
-      |__ 2-tix-log.json
       |__ ...
 ```
 
@@ -133,3 +131,4 @@ intervals :
 * The max_speed is measured in kilobits per second
 * The start time convention is 'HH:MM' using a 24-hour clock. It corresponds to the time in the current or following day, but it never exceeds 24 hours
 * The intervals should be in ascending order in terms of the speed percentage to guarantee that the torrent speed is stable when it changes the speed
+* The torrent client used is Vuze in its CLI mode. 
