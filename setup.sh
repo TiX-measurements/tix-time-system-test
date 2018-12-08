@@ -6,4 +6,4 @@ sudo apt install python3
 sudo python3 -m pip install pyyaml
 
 # Install tix-time-client
-git clone https://github.com/LuisAli22/tix-time-client
+git clone https://github.com/TiX-measurements/tix-time-client.git

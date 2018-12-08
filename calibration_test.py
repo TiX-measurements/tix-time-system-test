@@ -83,12 +83,14 @@ def logs_directory_path(logs_directory):
 '''
 Creates TestManager from test configuration and logs directory path and run the calibration test
 '''
-def run_test(test_configuration, logs_directory_path):
+def run_test(test_configuration, logs_directory):
+    print('Starting calibration test')
+
     max_speed = test_configuration[MAX_SPEED_INDEX]
     intervals = test_configuration[INTERVAL_INDEX]
     network_interface = test_configuration[NETWORK_INTERFACE_INDEX]
 
-    test_manager = TestManager(max_speed, intervals, network_interface, logs_directory_path)
+    test_manager = TestManager(max_speed, intervals, network_interface, logs_directory)
     test_manager.run()
 
 '''
@@ -106,13 +108,13 @@ def start_tix_time_client(username, password, installation, port, client_logs_di
                                  str(port),
                                  '{}/{}'.format(client_logs_directory, TIXTIMECLIENTLOGDIR)]
 
-    tix_time_client_process=Popen(tix_client_execution_args,
-                                 stdout=open('{}/{}'.format(test_logs_directory, CLIENTLOGFILENAME), 'w'),
-                                 stderr=DEVNULL,
-                                 cwd=CURRENT_PATH)
-    
-    launch_test_manager(args.test_configuration_file, logs_realpath)
+    tix_time_client_process = Popen(tix_client_execution_args,
+                                    stdout=open('{}/{}'.format(test_logs_directory, CLIENTLOGFILENAME), 'w'),
+                                    stderr=DEVNULL,
+                                    cwd=CURRENT_PATH)
 
+    return tix_time_client_process
+    
 '''
 Waits 1 minute after torrents finishes to get the last log file. After that, a SIGINT signal is sent
 to the tix time client process to stop it
@@ -123,6 +125,8 @@ def stop_tix_time_client(tix_time_client_process):
     time.sleep(SLEEPSECONDSAFTERTORRENTFINISH)
 
     tix_time_client_process.send_signal(signal.SIGINT)
+
+    print('Tix time client stopped')
 
 '''
 Calibration test flow:
@@ -156,7 +160,7 @@ if __name__ == '__main__':
                                                             args.logs_directory,
                                                             test_logs_directory)
 
-            run_test(test_configuration)
+            run_test(test_configuration, test_logs_directory)
 
             stop_tix_time_client(tix_time_client_process)
 
