@@ -34,7 +34,7 @@ To run the test, use the following script:
 
 All the arguments must be specified to run the script. During the test, the ouput will look like the following lines:
 
-```bash
+```
 Test will start in 0.19360786666666666 minutes
 Starting tix time client
 Starting calibration test
