@@ -45,9 +45,9 @@ class TestManager:
                 self.torrent_client.change_max_download_speed(speed)
                 
                 for i in range(0, interval['duration_minutes']):
-                    self.__log_estimated_speed(network_usage_log, self.MINUTE_IN_SECONDS)
-
                     sleep(self.MINUTE_IN_SECONDS)
+
+                    self.__log_estimated_speed(network_usage_log, self.MINUTE_IN_SECONDS)
 
                     self.torrent_client.clean_torrent_downloads()
                     
