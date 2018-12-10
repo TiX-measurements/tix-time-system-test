@@ -114,6 +114,8 @@ def start_tix_time_client(username, password, installation, port, client_logs_di
                                     stderr=DEVNULL,
                                     cwd=CURRENT_PATH)
 
+    time.sleep(5)
+    
     return tix_time_client_process
     
 '''
