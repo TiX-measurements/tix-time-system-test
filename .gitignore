@@ -1,0 +1,7 @@
+tmp/
+logs/
+log/
+torrent_downloads/
+modules/__pycache__
+tix-time-client/
+__pycache__/

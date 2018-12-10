@@ -1,28 +1,134 @@
 # tix-time-system-test
-Repository containing the scripts and queries needed to perform the System Test on the TiX System.
+Repository containing the scripts to perform the Calibration Test on the TiX System.
 
-## How to use this repo
-This repo contains many tools to perform various System tests. But the most important one are the following instructions.
+## Getting Started
 
-### How to perform a System Test
-To perform a System test first you must download a Bittorrent client. We prefer to use [Vuze](https://www.vuze.com/), 
-given its GUI and its very customizable scheduler. The next instructions are meant for that client.
+This repository contains all the tools necessary to perform calibration tests on your system. The tests were designed to run in Debian based distributions, in particular Ubuntu and Raspbian.
 
-You must create various profiles, throttling the speed at which the client will download the torrents. Once done this,
-schedule the client to use them. We like to use the following setup.
+### Prerequisites
+
+In order to run the tests, the systems needs to be able to run the [tix-time-client](https://github.com/TiX-measurements/tix-time-client). Therefore, the dependencies required are:
+
+* Java 8
+* Gradle 3
+
+### Installing
+
+To install the system test, run the following script:
+
+```bash
+git clone https://github.com/TiX-measurements/tix-time-system-test.git
+cd tix-time-system-test
+./setup.sh
 ```
-daily pause_all from 00:00 to 01:00
-daily unlimited from 01:00 to 02:00
-daily 75_pct_speed from 02:00 to 03:00
-daily half_speed from 03:00 to 04:00
-daily 25_pct_speed from 04:00 to 05:00
-daily pause_all from 05:00 to 23:59
+
+The setup.sh script installs Python 3, PyYaml and downloads the `tix-time-client` repository. Apart from the system test project, the torrent client needs to be downloaded. Therefore, follow the instructions in [INSTALL.md](torrent_client/INSTALL.md)
+
+### Running
+
+To run the test, use the following script:
+
+```bash
+./calibration_test.py -u username -p password -i installation -P port -l logs_directory -tcf test_configuration_file
 ```
-Once done this, you must put some torrents to download. Make sure that the total of the files will be enough for all 
-the test. We recommend using many Linux distro torrents for this (i.e.: Linux Mint, Linux Ubuntu, etc.)
 
-Turn on the TiX Client, and let the torrent download during the night.
+All the arguments must be specified to run the script. During the test, the ouput will look like the following lines:
 
-The next morning you only need to collect the data and see if the measurements are correct.
+```
+Test will start in 0.19360786666666666 minutes
+Starting tix time client
+Starting calibration test
+2018-12-08 13:45:00.020179  =>  Torrent started
+2018-12-08 13:45:08.031301  =>  Changed speed to 0
+2018-12-08 13:47:13.131312  =>  Changed speed to 7500
+2018-12-08 13:49:18.264643  =>  Changed speed to 15000
+2018-12-08 13:51:21.367613  =>  Changed speed to 22500
+2018-12-08 13:53:24.508206  =>  Changed speed to 30000
+2018-12-08 13:55:27.622741  =>  Changed speed to 0
+2018-12-08 13:57:32.764442  =>  Stopping Torrent
+2018-12-08 13:57:35.693646  =>  Torrent Stopped
+Stopping tix time client
+Tix time client Stopped
+```
 
-### How to use this test to collect samples for the tix-time-processor analysis notebook
+After the test finishes, the results are stored in the logs_directory with the following structure:
+
+```
+./logs_directory/
+  |
+  |__ client.log
+  |__ network_usage.log
+  |__ torrent_client.log
+  |__ description.yml
+  |__ tix-time-client-logs/
+      |__ ...
+```
+
+* client.log : Log with stdout of tix-time-client spawned during calibration test
+* network_usage.log : Log with the estimated download speed in kbps from the local interface
+* torrent_client.log : Log with stdout of torrent client spawned during calibration test
+* description.yml : Test configuration file used during test
+* tix-time-client-logs/ : Directory for tix-time-client log files
+
+### Test Configuration
+
+The test uses a torrent client to simulate the usage of network. At the beginning of the test, the torrent client adds all the torrent files specified in [torrents](torrents). By default, the following torrent files are included in the folder but its contents can be modified but the user depending on the tests to run. All downloads are sent do `/dev/null` every minute so space should not be a limitation for the calibration test.
+
+```
+./torrents/
+  |
+  |__ linuxmint-17-cinnamon-32bit-v2.iso.torrent
+  |__ linuxmint-17-cinnamon-64bit-v2.iso.torrent
+  |__ linuxmint-17-cinnamon-nocodecs-32bit-v2.iso.torrent
+  |__ linuxmint-17-cinnamon-nocodecs-64bit-v2.iso.torrent
+  |__ linuxmint-17-cinnamon-oem-64bit-v2.iso.torrent
+  |__ linuxmint-17-kde-dvd-32bit.iso.torrent
+  |__ linuxmint-17-kde-dvd-64bit.iso.torrent
+  |__ linuxmint-17-mate-32bit-v2.iso.torrent
+  |__ linuxmint-17-mate-64bit-v2.iso.torrent
+  |__ ubuntu-14.04.5-desktop-amd64.iso.torrent
+  |__ ubuntu-14.04.5-desktop-i386.iso.torrent
+  |__ ubuntu-14.04.5-server-amd64.iso.torrent
+  |__ ubuntu-14.04.5-server-i386.iso.torrent
+  |__ ubuntu-16.04.5-desktop-amd64.iso.torrent
+  |__ ubuntu-16.04.5-desktop-i386.iso.torrent
+  |__ ubuntu-16.04.5-server-amd64.iso.torrent
+  |__ ubuntu-16.04.5-server-i386.iso.torrent
+  |__ ubuntu-18.04.1-desktop-amd64.iso.torrent
+  |__ ubuntu-18.04.1-live-server-amd64.iso.torrent
+  |__ ubuntu-18.10-desktop-amd64.iso.torrent
+  |__ ubuntu-18.10-live-server-amd64.iso.torrent
+```
+
+On the other hand, the user can select which test configuration file to use in each test. The configuration file has the following structure:
+
+```yaml
+max_speed_kbps : 12000
+network_interface: 'wlan0'
+start_time : '00:00'
+intervals :
+  - duration_minutes : 60
+    speed_percentage : 0
+ 
+  - duration_minutes : 60
+    speed_percentage : 25
+ 
+  - duration_minutes : 60
+    speed_percentage : 50 
+ 
+  - duration_minutes : 60
+    speed_percentage : 75
+
+  - duration_minutes : 60
+    speed_percentage : 100
+ 
+  - duration_minutes : 60
+    speed_percentage : 0
+```
+
+#### Considerations
+
+* The max_speed is measured in kilobits per second
+* The start time convention is 'HH:MM' using a 24-hour clock. It corresponds to the time in the current or following day, but it never exceeds 24 hours
+* The intervals should be in ascending order in terms of the speed percentage to guarantee that the torrent speed is stable when it changes the speed
+* The torrent client used is Vuze in its CLI mode. 
