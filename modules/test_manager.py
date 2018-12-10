@@ -66,7 +66,7 @@ class TestManager:
         
         estimated_speed_kbps = (updated_downloaded_bytes - self.downloaded_bytes) * 8 / (1000 * delta_time)  
         
-        log_file.write('{}|{}\n'.format(time(), int(estimated_speed_kbps)))
+        log_file.write('{}|{}\n'.format(time(), estimated_speed_kbps))
         
         self.downloaded_bytes = updated_downloaded_bytes
 
