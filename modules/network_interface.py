@@ -10,6 +10,8 @@ from subprocess import Popen, PIPE
 
 class NetworkInterface:
 
+    MAX_DOWNLOADED_BYTES = 1 << 32
+
     def __init__(self, interface):
         self.interface = interface
 

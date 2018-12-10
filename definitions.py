@@ -9,9 +9,9 @@
 import argparse
 import sys, getopt
 
-BUILDFILE= "tix-time-client/Model/build/libs/tix-time-client.jar"
+BUILDFILE= "tix-time-client/tix-time-client-cli/build/libs/tix-time-client.jar"
 GRADLECOMMAND = 'gradle'
-GRADLEOPTIONS = ':Model:jar'
+GRADLEOPTIONS = ':tix-time-client-cli:jar'
 
 CURRENT_PATH ="."
 JAVA_COMMAND = 'java'

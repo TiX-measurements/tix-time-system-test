@@ -20,6 +20,7 @@ Builds grandle jar from the tix-time-client downloaded.
 The main process waits for the build subprocess to finish.
 '''
 def build_tix_time_client():
+    print('Building tix time client')
     gradle_build_process = Popen([GRADLECOMMAND, GRADLEOPTIONS],
                                  stdout=PIPE,
                                  stderr=PIPE,
